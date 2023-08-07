@@ -4,20 +4,17 @@ from django import forms
 from django.urls import reverse
 
 # Create your views here.
-tasks = [
-    "one",
-    "two",
-    "three",
-]
 
 class NewTaskForm(forms.Form):
     task = forms.CharField(label="New Task")
     priority = forms.IntegerField(label="Priority", min_value=1, max_value=5)
 
 def index(request):
+    if "tasks" not in request.session:
+        request.session["tasks"] = []
     # python does not support JS shorthand for assigning key/value of the same name.
     return render(request, "tasks/index.html", {
-        "tasks": tasks
+        "tasks": request.session["tasks"]
     })
 
 
@@ -26,7 +23,7 @@ def add(request):
         form = NewTaskForm(request.POST)
         if form.is_valid():
             task = form.cleaned_data["task"]
-            tasks.append(task)
+            request.session["tasks"] += [task]
             return HttpResponseRedirect(reverse("tasks:index"))
         else:
             return render(request, "tasks/add.html", {
