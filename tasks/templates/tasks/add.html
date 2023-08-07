@@ -4,10 +4,7 @@
     <h1>Add Task</h1>
     <form action="{% url 'tasks:add' %}" method="POST">
     {%  csrf_token %}
-        <label>
-            <span>Task</span>
-            <input type="text" name="task" />
-        </label>
+        {{ form }}
         <input type="submit" value="Add"/>
     </form>
     <a href="{% url 'tasks:index' %}">List</a>
